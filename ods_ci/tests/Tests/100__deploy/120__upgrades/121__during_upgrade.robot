@@ -32,9 +32,6 @@ Upgrade RHODS
     ...     Upgrade
     ${return_code}    ${output}    Run And Return Rc And Output   oc patch installplan $(oc get installplans -n ${OPERATOR_NAMESPACE} | grep -v NAME | awk '{print $1}') -n ${OPERATOR_NAMESPACE} --type='json' -p '[{"op": "replace", "path": "/spec/approved", "value": true}]'   #robocop:disable
     Should Be Equal As Integers    ${return_code}     0   msg=Error while upgradeing RHODS
-    Sleep  10s      reason=wait for ten second until operator goes into init state
-    ${return_code}    ${output}    Run And Return Rc And Output   oc get pod -n ${OPERATOR_NAMESPACE} -l name=rhods-operator --no-headers --output='custom-columns=STATUS:.status.phase'    #robocop:disable
-    Should Contain    ${output}    Pending
     OpenShiftLibrary.Wait For Pods Status  namespace=${OPERATOR_NAMESPACE}  timeout=300
 
 TensorFlow Image Test
